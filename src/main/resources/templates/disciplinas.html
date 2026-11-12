@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniConcursos | Ciclo de Estudos</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+    <header class="navbar">
+        <h1>UniConcursos</h1>
+        <nav>
+            <a th:href="@{/disciplinas}" class="active">Ciclo de Estudos</a>
+            <a th:href="@{/simulados}">Simulados</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="card">
+            <h2>Adicionar Matéria ao Ciclo</h2>
+            <form th:action="@{/disciplinas/salvar}" th:object="${novaDisciplina}" method="post" class="form-grid-4">
+                <input type="text" th:field="*{nome}" placeholder="Nome da Disciplina (ex: Informática)" required>
+                <input type="number" th:field="*{ordemCiclo}" placeholder="Ordem no Ciclo" min="1" required>
+                <input type="number" step="0.5" th:field="*{metaHoras}" placeholder="Meta de Horas" min="0.5" required>
+                <button type="submit" class="btn-primary">Cadastrar</button>
+            </form>
+        </section>
+
+        <section class="card">
+            <div class="header-row">
+                <h2>Fila do Ciclo Atual</h2>
+                <form th:action="@{/disciplinas/reiniciar}" method="post">
+                    <button type="submit" class="btn-secondary">Zerar Horas do Ciclo</button>
+                </form>
+            </div>
+
+            <p th:if="${#lists.isEmpty(disciplinas)}" class="empty-msg">
+                Nenhuma disciplina cadastrada no ciclo. Adicione uma matéria acima.
+            </p>
+
+            <table th:if="${!#lists.isEmpty(disciplinas)}">
+                <thead>
+                    <tr>
+                        <th>Ordem</th>
+                        <th>Disciplina</th>
+                        <th>Progresso</th>
+                        <th>Horas</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="d : ${disciplinas}">
+                        <td th:text="${d.ordemCiclo} + 'º'"></td>
+                        <td><strong th:text="${d.nome}"></strong></td>
+                        <td th:text="${d.progressoPercentual} + '%'"></td>
+                        <td th:text="${d.horasEstudadas} + ' / ' + ${d.metaHoras}"></td>
+                        <td>
+                            <form th:action="@{/disciplinas/{id}/estudar(id=${d.id})}" method="post">
+                                <button type="submit" class="btn-primary">Estudar +1h</button>
+                            </form>
+                            <a th:href="@{/disciplinas/excluir/{id}(id=${d.id})}">Excluir</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html>
