@@ -1,70 +1,305 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>UniConcursos | Simulados</title>
+
     <link rel="stylesheet" th:href="@{/style.css}">
 </head>
+
 <body>
+
+    <!-- MENU SUPERIOR -->
     <header class="navbar">
-        <h1>UniConcursos</h1>
+
+        <div class="brand">
+            <h1>UniConcursos</h1>
+        </div>
+
         <nav>
-            <a th:href="@{/disciplinas}">Ciclo de Estudos</a>
-            <a th:href="@{/simulados}" class="active">Simulados</a>
+            <a th:href="@{/disciplinas}">
+                Ciclo de Estudos
+            </a>
+
+            <a th:href="@{/simulados}" class="active">
+                Simulados
+            </a>
         </nav>
+
     </header>
 
     <main class="container">
-        <section class="card">
-            <h2>Registrar Novo Simulado</h2>
-            <form th:action="@{/simulados/salvar}" th:object="${novoSimulado}" method="post" class="form-grid-simulado">
-                <input type="text" th:field="*{titulo}" placeholder="Título (ex: Simulado Banca AOCP 01)" required>
 
-                <select th:field="*{disciplina}" required>
-                    <option value="">Selecione a Disciplina...</option>
-                    <option th:each="d : ${disciplinas}" th:value="${d.id}" th:text="${d.nome}"></option>
-                </select>
+        <!-- BANNER DE APRESENTAÇÃO -->
+        <section class="hero">
 
-                <input type="date" th:field="*{dataRealizacao}" required>
-                <input type="number" th:field="*{totalQuestoes}" placeholder="Total Questões" min="1" required>
-                <input type="number" th:field="*{acertos}" placeholder="Acertos" min="0" required>
-                <button type="submit" class="btn-primary">Salvar Resultado</button>
-            </form>
+            <div class="hero-content">
+
+                <h2>Simulados</h2>
+
+                <p>
+                    Registre seus resultados, acompanhe seu desempenho
+                    e identifique sua evolução nos estudos.
+                </p>
+
+            </div>
+
+            <img
+                src="/images/livros.png"
+                alt="Livros empilhados"
+                class="hero-books"
+            >
+
         </section>
 
+        <!-- INDICADORES -->
+        <section class="stats-grid">
+
+            <!-- SIMULADOS REGISTRADOS -->
+            <div class="stat-card">
+
+                <div class="stat-icon">
+
+                    <span>▤</span>
+
+                </div>
+
+                <div>
+                    <strong th:text="${#lists.size(simulados)}">0</strong>
+                    <span>Simulados registrados</span>
+                </div>
+
+            </div>
+
+            <!-- RESULTADOS -->
+            <div class="stat-card">
+
+                <div class="stat-icon">
+
+                    <svg
+                        viewBox="0 0 48 48"
+                        class="target-image"
+                        xmlns="http://www.w3.org/2000/svg"
+                        role="img"
+                        aria-label="Alvo"
+                    >
+
+                        <circle
+                            cx="24"
+                            cy="24"
+                            r="19"
+                            fill="none"
+                            stroke="#344967"
+                            stroke-width="3"
+                        />
+
+                        <circle
+                            cx="24"
+                            cy="24"
+                            r="12"
+                            fill="none"
+                            stroke="#344967"
+                            stroke-width="3"
+                        />
+
+                        <circle
+                            cx="24"
+                            cy="24"
+                            r="5"
+                            fill="#344967"
+                        />
+
+                        <path
+                            d="M24 24 L40 8 M33 8 H40 V15"
+                            fill="none"
+                            stroke="#344967"
+                            stroke-width="3"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+
+                    </svg>
+
+                </div>
+
+                <div>
+                    <strong>Resultados</strong>
+                    <span>Consulte seu histórico</span>
+                </div>
+
+            </div>
+
+            <!-- EVOLUÇÃO -->
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ↗
+                </div>
+
+                <div>
+                    <strong>Evolução</strong>
+                    <span>Acompanhe seus acertos</span>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- REGISTRAR NOVO SIMULADO -->
         <section class="card">
-            <div class="header-row">
+
+            <div class="card-heading">
+                <h2>Registrar Novo Simulado</h2>
+            </div>
+
+            <form
+                th:action="@{/simulados/salvar}"
+                th:object="${novoSimulado}"
+                method="post"
+                class="form-grid-simulado"
+            >
+
+                <input
+                    type="text"
+                    th:field="*{titulo}"
+                    placeholder="Título (ex: Simulado Banca AOCP)"
+                    required
+                >
+
+                <select th:field="*{disciplina}" required>
+
+                    <option value="">
+                        Selecione a Disciplina...
+                    </option>
+
+                    <option
+                        th:each="d : ${disciplinas}"
+                        th:value="${d.id}"
+                        th:text="${d.nome}"
+                    >
+                    </option>
+
+                </select>
+
+                <input
+                    type="date"
+                    th:field="*{dataRealizacao}"
+                    required
+                >
+
+                <input
+                    type="number"
+                    th:field="*{totalQuestoes}"
+                    placeholder="Total Questões"
+                    min="1"
+                    required
+                >
+
+                <input
+                    type="number"
+                    th:field="*{acertos}"
+                    placeholder="Acertos"
+                    min="0"
+                    required
+                >
+
+                <button type="submit" class="btn-primary">
+                    Salvar Resultado
+                </button>
+
+            </form>
+
+        </section>
+
+        <!-- HISTÓRICO DE DESEMPENHO -->
+        <section class="card">
+
+            <div class="card-heading">
                 <h2>Histórico de Desempenho</h2>
             </div>
 
-            <p th:if="${#lists.isEmpty(simulados)}" class="empty-msg">
-                Nenhum simulado registrado ainda. Cadastre o primeiro acima.
+            <!-- MENSAGEM QUANDO NÃO EXISTIREM SIMULADOS -->
+            <p
+                th:if="${#lists.isEmpty(simulados)}"
+                class="empty-msg"
+            >
+                Nenhum simulado registrado ainda.
+                Cadastre o primeiro acima.
             </p>
 
-            <table th:if="${!#lists.isEmpty(simulados)}">
-                <thead>
-                    <tr>
-                        <th>Data</th>
-                        <th>Título</th>
-                        <th>Disciplina</th>
-                        <th>Acertos / Total</th>
-                        <th>Aproveitamento</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="simulado : ${simulados}">
-                        <td th:text="${simulado.dataRealizacao}"></td>
-                        <td th:text="${simulado.titulo}"></td>
-                        <td th:text="${simulado.disciplina.nome}"></td>
-                        <td th:text="${simulado.acertos} + ' / ' + ${simulado.totalQuestoes}"></td>
-                        <td th:text="${simulado.percentualAcerto} + '%'"></td>
-                        <td><a th:href="@{/simulados/excluir/{id}(id=${simulado.id})}">Excluir</a></td>
-                    </tr>
-                </tbody>
-            </table>
+            <!-- TABELA DE RESULTADOS -->
+            <div class="table-wrapper">
+
+                <table th:if="${!#lists.isEmpty(simulados)}">
+
+                    <thead>
+
+                        <tr>
+                            <th>Data</th>
+                            <th>Título</th>
+                            <th>Disciplina</th>
+                            <th>Acertos / Total</th>
+                            <th>Aproveitamento</th>
+                            <th>Ações</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr th:each="simulado : ${simulados}">
+
+                            <td
+                                th:text="${simulado.dataRealizacao}"
+                            ></td>
+
+                            <td>
+                                <strong th:text="${simulado.titulo}"></strong>
+                            </td>
+
+                            <td
+                                th:text="${simulado.disciplina.nome}"
+                            ></td>
+
+                            <td
+                                th:text="${simulado.acertos} + ' / ' + ${simulado.totalQuestoes}"
+                            ></td>
+
+                            <td>
+
+                                <span
+                                    class="result-pill"
+                                    th:text="${simulado.percentualAcerto} + '%'"
+                                >
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <a
+                                    th:href="@{/simulados/excluir/{id}(id=${simulado.id})}"
+                                >
+                                    Excluir
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
         </section>
+
     </main>
+
 </body>
 </html>

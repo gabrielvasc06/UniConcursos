@@ -1,14 +1,21 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UniConcursos | Ciclo de Estudos</title>
     <link rel="stylesheet" th:href="@{/style.css}">
 </head>
+
 <body>
+
     <header class="navbar">
-        <h1>UniConcursos</h1>
+        <div class="brand">
+            <h1>UniConcursos</h1>
+        </div>
+
         <nav>
             <a th:href="@{/disciplinas}" class="active">Ciclo de Estudos</a>
             <a th:href="@{/simulados}">Simulados</a>
@@ -16,54 +23,264 @@
     </header>
 
     <main class="container">
-        <section class="card">
-            <h2>Adicionar Matéria ao Ciclo</h2>
-            <form th:action="@{/disciplinas/salvar}" th:object="${novaDisciplina}" method="post" class="form-grid-4">
-                <input type="text" th:field="*{nome}" placeholder="Nome da Disciplina (ex: Informática)" required>
-                <input type="number" th:field="*{ordemCiclo}" placeholder="Ordem no Ciclo" min="1" required>
-                <input type="number" step="0.5" th:field="*{metaHoras}" placeholder="Meta de Horas" min="0.5" required>
-                <button type="submit" class="btn-primary">Cadastrar</button>
-            </form>
-        </section>
 
-        <section class="card">
-            <div class="header-row">
-                <h2>Fila do Ciclo Atual</h2>
-                <form th:action="@{/disciplinas/reiniciar}" method="post">
-                    <button type="submit" class="btn-secondary">Zerar Horas do Ciclo</button>
-                </form>
+        <!-- BANNER -->
+        <section class="hero">
+            <div class="hero-content">
+                <h2>Ciclo de Estudos</h2>
+                <p>
+                    Organize suas disciplinas, defina metas e acompanhe
+                    seu progresso nos estudos.
+                </p>
             </div>
 
-            <p th:if="${#lists.isEmpty(disciplinas)}" class="empty-msg">
-                Nenhuma disciplina cadastrada no ciclo. Adicione uma matéria acima.
+            <img
+                src="/images/livros.png"
+                alt="Livros empilhados"
+                class="hero-books"
+            >
+        </section>
+
+        <!-- INDICADORES -->
+        <section class="stats-grid">
+
+            <!-- DISCIPLINAS CADASTRADAS -->
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <img
+                        src="/images/livros.png"
+                        alt="Livros"
+                        class="stat-image"
+                    >
+                </div>
+
+                <div>
+                    <strong th:text="${#lists.size(disciplinas)}">0</strong>
+                    <span>Disciplinas cadastradas</span>
+                </div>
+            </div>
+
+            <!-- CICLOS DE ESTUDO: ÍCONE DE ALVO -->
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <svg
+                        viewBox="0 0 48 48"
+                        class="target-image"
+                        xmlns="http://www.w3.org/2000/svg"
+                        role="img"
+                        aria-label="Alvo"
+                    >
+                        <circle
+                            cx="24"
+                            cy="24"
+                            r="19"
+                            fill="none"
+                            stroke="#344967"
+                            stroke-width="3"
+                        />
+
+                        <circle
+                            cx="24"
+                            cy="24"
+                            r="12"
+                            fill="none"
+                            stroke="#344967"
+                            stroke-width="3"
+                        />
+
+                        <circle
+                            cx="24"
+                            cy="24"
+                            r="5"
+                            fill="#344967"
+                        />
+
+                        <path
+                            d="M24 24 L40 8 M33 8 H40 V15"
+                            fill="none"
+                            stroke="#344967"
+                            stroke-width="3"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                    </svg>
+                </div>
+
+                <div>
+                    <strong th:text="${#lists.size(disciplinas)}">0</strong>
+                    <span>Ciclos de estudo</span>
+                </div>
+            </div>
+
+            <!-- PROGRESSO -->
+            <div class="stat-card">
+                <div class="stat-icon">
+                    ↗
+                </div>
+
+                <div>
+                    <strong>Progresso</strong>
+                    <span>Acompanhe sua evolução</span>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- CADASTRO DE DISCIPLINAS -->
+        <section class="card">
+
+            <div class="card-heading">
+                <h2>Adicionar Matéria ao Ciclo</h2>
+            </div>
+
+            <form
+                th:action="@{/disciplinas/salvar}"
+                th:object="${novaDisciplina}"
+                method="post"
+                class="form-grid-4"
+            >
+
+                <input
+                    type="text"
+                    th:field="*{nome}"
+                    placeholder="Nome da Disciplina (ex: Informática)"
+                    required
+                >
+
+                <input
+                    type="number"
+                    th:field="*{ordemCiclo}"
+                    placeholder="Ordem"
+                    min="1"
+                    required
+                >
+
+                <input
+                    type="number"
+                    step="0.5"
+                    th:field="*{metaHoras}"
+                    placeholder="Meta (h)"
+                    min="0.5"
+                    required
+                >
+
+                <button type="submit" class="btn-primary">
+                    + Cadastrar
+                </button>
+
+            </form>
+
+        </section>
+
+        <!-- FILA DO CICLO ATUAL -->
+        <section class="card">
+
+            <div class="header-row">
+
+                <div class="card-heading">
+                    <h2>Fila do Ciclo Atual</h2>
+                </div>
+
+                <form
+                    th:action="@{/disciplinas/reiniciar}"
+                    method="post"
+                >
+                    <button type="submit" class="btn-secondary">
+                        Zerar Horas do Ciclo
+                    </button>
+                </form>
+
+            </div>
+
+            <p
+                th:if="${#lists.isEmpty(disciplinas)}"
+                class="empty-msg"
+            >
+                Nenhuma disciplina cadastrada no ciclo.
+                Adicione uma matéria acima.
             </p>
 
-            <table th:if="${!#lists.isEmpty(disciplinas)}">
-                <thead>
-                    <tr>
-                        <th>Ordem</th>
-                        <th>Disciplina</th>
-                        <th>Progresso</th>
-                        <th>Horas</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="d : ${disciplinas}">
-                        <td th:text="${d.ordemCiclo} + 'º'"></td>
-                        <td><strong th:text="${d.nome}"></strong></td>
-                        <td th:text="${d.progressoPercentual} + '%'"></td>
-                        <td th:text="${d.horasEstudadas} + ' / ' + ${d.metaHoras}"></td>
-                        <td>
-                            <form th:action="@{/disciplinas/{id}/estudar(id=${d.id})}" method="post">
-                                <button type="submit" class="btn-primary">Estudar +1h</button>
-                            </form>
-                            <a th:href="@{/disciplinas/excluir/{id}(id=${d.id})}">Excluir</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-wrapper">
+
+                <table th:if="${!#lists.isEmpty(disciplinas)}">
+
+                    <thead>
+                        <tr>
+                            <th>Ordem</th>
+                            <th>Disciplina</th>
+                            <th>Progresso</th>
+                            <th>Horas</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr th:each="d : ${disciplinas}">
+
+                            <td th:text="${d.ordemCiclo} + 'º'"></td>
+
+                            <td>
+                                <strong th:text="${d.nome}"></strong>
+                            </td>
+
+                            <td class="progress-cell">
+
+                                <div class="progress-info">
+
+                                    <div class="progress-track">
+                                        <span
+                                            class="progress-fill"
+                                            th:style="'width:' + ${d.progressoPercentual} + '%'"
+                                        ></span>
+                                    </div>
+
+                                    <span
+                                        class="progress-number"
+                                        th:text="${d.progressoPercentual} + '%'"
+                                    ></span>
+
+                                </div>
+
+                            </td>
+
+                            <td
+                                th:text="${d.horasEstudadas} + ' / ' + ${d.metaHoras}"
+                            ></td>
+
+                            <td>
+
+                                <form
+                                    th:action="@{/disciplinas/{id}/estudar(id=${d.id})}"
+                                    method="post"
+                                >
+                                    <button
+                                        type="submit"
+                                        class="btn-primary"
+                                    >
+                                        Estudar +1h
+                                    </button>
+                                </form>
+
+                                <a
+                                    th:href="@{/disciplinas/excluir/{id}(id=${d.id})}"
+                                >
+                                    Excluir
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
         </section>
+
     </main>
+
 </body>
 </html>
